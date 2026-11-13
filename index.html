@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduGlobe Access - Global Scholarship & University Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            800: '#1e1b4b',
+                            900: '#0f172a',
+                            950: '#020617',
+                            accent: '#06b6d4'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <!-- TOP HEADER / NAV -->
+    <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 lg:px-8 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <!-- Logo & Title -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-400 flex items-center justify-center text-white text-xl font-black shadow-lg shadow-indigo-500/30">
+                    E
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-200 to-cyan-400">
+                        EduGlobe
+                    </h1>
+                    <p class="text-xs text-slate-400 font-medium">International Scholarship & Admission Gateway</p>
+                </div>
+            </div>
+
+            <!-- Main Navigation Links -->
+            <nav class="hidden md:flex items-center gap-1 bg-slate-800/60 p-1 rounded-xl border border-slate-700/50">
+                <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-indigo-600 text-white shadow-md">
+                    <i class="fa-solid fa-house mr-2"></i><span data-i18n="home">Home</span>
+                </button>
+                <button onclick="switchTab('profile')" id="nav-profile" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-slate-700/60 text-slate-300">
+                    <i class="fa-solid fa-user-graduate mr-2"></i><span data-i18n="profile">Profile</span>
+                </button>
+                <button onclick="switchTab('scholarships')" id="nav-scholarships" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-slate-700/60 text-slate-300">
+                    <i class="fa-solid fa-graduation-cap mr-2"></i><span data-i18n="scholarships">Scholarships</span>
+                </button>
+                <button onclick="switchTab('portals')" id="nav-portals" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-slate-700/60 text-slate-300">
+                    <i class="fa-solid fa-globe mr-2"></i><span>Global Portals</span>
+                </button>
+                <button onclick="switchTab('instructions')" id="nav-instructions" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-slate-700/60 text-slate-300">
+                    <i class="fa-solid fa-book-open mr-2"></i><span data-i18n="instructions">Instructions</span>
+                </button>
+                <button onclick="switchTab('help')" id="nav-help" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-slate-700/60 text-slate-300">
+                    <i class="fa-solid fa-circle-question mr-2"></i><span data-i18n="help">Help</span>
+                </button>
+                <button onclick="switchTab('inbox')" id="nav-inbox" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-slate-700/60 text-slate-300 relative">
+                    <i class="fa-solid fa-envelope mr-2"></i><span data-i18n="inbox">Inbox</span>
+                    <span id="inbox-badge" class="hidden absolute -top-1 -right-1 w-5 h-5 bg-cyan-500 text-slate-950 font-bold text-xs rounded-full flex items-center justify-center animate-pulse">0</span>
+                </button>
+                <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-slate-700/60 text-slate-300">
+                    <i class="fa-solid fa-gear mr-2"></i><span data-i18n="settings">Settings</span>
+                </button>
+            </nav>
+
+            <!-- Actions Right -->
+            <div class="flex items-center gap-3">
+                <!-- Online Status -->
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-xs text-slate-300" id="status-pill">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span id="status-text">Online</span>
+                </div>
+
+                <!-- Language Picker (24 Languages) -->
+                <div class="relative">
+                    <select id="language-select" onchange="changeLanguage(this.value)" class="bg-slate-800 text-slate-200 border border-slate-700 text-xs font-semibold rounded-lg px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        <option value="en">English (EN)</option>
+                        <option value="es">Español (ES)</option>
+                        <option value="fr">Français (FR)</option>
+                        <option value="de">Deutsch (DE)</option>
+                        <option value="zh">中文 (ZH)</option>
+                        <option value="ar">العربية (AR)</option>
+                        <option value="hi">हिन्दी (HI)</option>
+                        <option value="pt">Português (PT)</option>
+                        <option value="ru">Русский (RU)</option>
+                        <option value="ja">日本語 (JA)</option>
+                        <option value="ko">한국어 (KO)</option>
+                        <option value="tr">Türkçe (TR)</option>
+                        <option value="sw">Kiswahili (SW)</option>
+                        <option value="am">አማርኛ (AM)</option>
+                        <option value="it">Italiano (IT)</option>
+                        <option value="nl">Nederlands (NL)</option>
+                        <option value="pl">Polski (PL)</option>
+                        <option value="id">Bahasa Indonesia (ID)</option>
+                        <option value="th">ไทย (TH)</option>
+                        <option value="vi">Tiếng Việt (VI)</option>
+                        <option value="fa">فارسی (FA)</option>
+                        <option value="ur">اردو (UR)</option>
+                        <option value="bn">বাংলা (BN)</option>
+                        <option value="ms">Bahasa Melayu (MS)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Bottom/Sub Navigation -->
+        <div class="md:hidden flex items-center justify-around mt-3 pt-2 border-t border-slate-800/80 text-xs font-medium">
+            <button onclick="switchTab('home')" class="flex flex-col items-center gap-1 text-indigo-400"><i class="fa-solid fa-house text-base"></i><span>Home</span></button>
+            <button onclick="switchTab('profile')" class="flex flex-col items-center gap-1 text-slate-400"><i class="fa-solid fa-user-graduate text-base"></i><span>Profile</span></button>
+            <button onclick="switchTab('scholarships')" class="flex flex-col items-center gap-1 text-slate-400"><i class="fa-solid fa-graduation-cap text-base"></i><span>Explore</span></button>
+            <button onclick="switchTab('portals')" class="flex flex-col items-center gap-1 text-slate-400"><i class="fa-solid fa-globe text-base"></i><span>Portals</span></button>
+            <button onclick="switchTab('inbox')" class="flex flex-col items-center gap-1 text-slate-400"><i class="fa-solid fa-envelope text-base"></i><span>Inbox</span></button>
+            <button onclick="switchTab('settings')" class="flex flex-col items-center gap-1 text-slate-400"><i class="fa-solid fa-gear text-base"></i><span>Settings</span></button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 lg:p-8">
+
+        <!-- TAB 1: HOME SLIDER & WELCOME HERO -->
+        <section id="tab-home" class="tab-content space-y-8">
+            <!-- Hero Banner Slider -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-slate-800 p-8 lg:p-12 shadow-2xl">
+                <div class="absolute -right-20 -top-20 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -left-20 -bottom-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="relative z-10 max-w-3xl space-y-6">
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                        <i class="fa-solid fa-sparkles text-cyan-400"></i> Free Global Educational Gateway
+                    </span>
+                    <h1 class="text-3xl sm:text-5xl font-black text-white leading-tight">
+                        <span data-i18n="welcomeMsg">Welcome to EduGlobe Scholarship Portal</span>
+                    </h1>
+                    <p class="text-slate-300 text-base sm:text-lg font-normal leading-relaxed">
+                        Discover 100% Fully Funded, Partial, and Self-Funded scholarships across 150+ countries. Supporting High School (Grades 9-12), Diploma, Bachelor's, Master's, and PhD programs with instant application processing and automated direct notification.
+                    </p>
+                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                        <button onclick="switchTab('profile')" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-slate-950 font-bold text-base shadow-xl shadow-indigo-500/20 transition-all flex items-center gap-2">
+                            <span>Get Started & Setup Profile</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <button onclick="switchTab('instructions')" class="px-6 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-base transition-all">
+                            View Requirements
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-xl font-bold">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Global University Network</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Verified institution profiles with detailed requirements, age allowances, contacts, monthly stipends, and deadlines.</p>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xl font-bold">
+                        <i class="fa-solid fa-file-shield"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Direct Document Submission</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Easily upload Transcripts, Passports, Recommendation letters, Proficiency test scores, and Medical certifications.</p>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xl font-bold">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Instant Email Confirmation</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Receive complete submission summaries sent directly to your registered email inbox upon applying.</p>
+                </div>
+            </div>
+
+            <!-- Academic Level Quick Selector -->
+            <div class="space-y-4">
+                <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-indigo-400"></i> Select Your Desired Academic Level
+                </h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <button onclick="selectLevel('highschool')" class="level-card p-5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-indigo-500 text-left transition-all group">
+                        <div class="text-indigo-400 text-2xl mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-school"></i></div>
+                        <h4 class="font-bold text-white text-base">High School</h4>
+                        <p class="text-xs text-slate-400">Grades 9 - 12</p>
+                    </button>
+
+                    <button onclick="selectLevel('diploma')" class="level-card p-5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-indigo-500 text-left transition-all group">
+                        <div class="text-cyan-400 text-2xl mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-certificate"></i></div>
+                        <h4 class="font-bold text-white text-base">Diploma</h4>
+                        <p class="text-xs text-slate-400">Vocational / Technical</p>
+                    </button>
+
+                    <button onclick="selectLevel('bachelor')" class="level-card p-5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-indigo-500 text-left transition-all group">
+                        <div class="text-emerald-400 text-2xl mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-user-graduate"></i></div>
+                        <h4 class="font-bold text-white text-base">Bachelor's</h4>
+                        <p class="text-xs text-slate-400">Undergraduate Degree</p>
+                    </button>
+
+                    <button onclick="selectLevel('master')" class="level-card p-5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-indigo-500 text-left transition-all group">
+                        <div class="text-purple-400 text-2xl mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-award"></i></div>
+                        <h4 class="font-bold text-white text-base">Master's</h4>
+                        <p class="text-xs text-slate-400">Postgraduate Degree</p>
+                    </button>
+
+                    <button onclick="selectLevel('phd')" class="level-card p-5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-indigo-500 text-left transition-all group">
+                        <div class="text-amber-400 text-2xl mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-microscope"></i></div>
+                        <h4 class="font-bold text-white text-base">PhD</h4>
+                        <p class="text-xs text-slate-400">Doctorate Research</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: STUDENT PROFILE FORM -->
+        <section id="tab-profile" class="tab-content hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 lg:p-8 space-y-6">
+                <div class="border-b border-slate-800 pb-4 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Student Personal Profile</h2>
+                        <p class="text-sm text-slate-400">Please provide your details before exploring and submitting scholarship applications.</p>
+                    </div>
+                    <span class="text-xs px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30 font-semibold">Step 1 of 2</span>
+                </div>
+
+                <form id="profile-form" onsubmit="saveProfile(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Full Name *</label>
+                        <input type="text" id="user-fullname" required placeholder="e.g. Sarah Jenkins" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Email Address *</label>
+                        <input type="email" id="user-email" required placeholder="sarah@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Age (Years) *</label>
+                        <input type="number" id="user-age" min="12" max="65" required placeholder="e.g. 18" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Target Academic Level *</label>
+                        <select id="user-level" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500">
+                            <option value="highschool">High School (Grade 9 - 12)</option>
+                            <option value="diploma">Diploma / Vocational</option>
+                            <option value="bachelor">Bachelor's Degree</option>
+                            <option value="master">Master's Degree</option>
+                            <option value="phd">PhD / Doctorate</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Country of Citizenship *</label>
+                        <input type="text" id="user-country" required placeholder="e.g. Canada, Kenya, Brazil" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Region / Province *</label>
+                        <input type="text" id="user-region" required placeholder="e.g. Ontario / Nairobi / Bavaria" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+
+                    <div class="md:col-span-2 flex justify-end gap-3 pt-4 border-t border-slate-800">
+                        <button type="submit" class="px-8 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Save Profile & Continue</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- TAB 3: SCHOLARSHIPS EXPLORER -->
+        <section id="tab-scholarships" class="tab-content hidden space-y-6">
+            
+            <!-- Filter Bar Header -->
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Find Institutions & Scholarships</h2>
+                    <p class="text-sm text-slate-400">Filter by academic level, target funding type, or country.</p>
+                </div>
+
+                <!-- Academic Level Switcher Tabs -->
+                <div class="flex flex-wrap gap-2 border-b border-slate-800 pb-4" id="level-tabs-container">
+                    <button onclick="setFilterLevel('highschool')" id="btn-lvl-highschool" class="lvl-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white">High School (Grades 9-12)</button>
+                    <button onclick="setFilterLevel('diploma')" id="btn-lvl-diploma" class="lvl-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">Diploma</button>
+                    <button onclick="setFilterLevel('bachelor')" id="btn-lvl-bachelor" class="lvl-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">Bachelor's</button>
+                    <button onclick="setFilterLevel('master')" id="btn-lvl-master" class="lvl-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">Master's</button>
+                    <button onclick="setFilterLevel('phd')" id="btn-lvl-phd" class="lvl-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">PhD</button>
+                </div>
+
+                <!-- Funding Type Selector -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">Choose Funding Type</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <button onclick="setFundingType('fully')" id="btn-fund-fully" class="fund-btn p-4 rounded-xl border border-indigo-500/50 bg-indigo-950/40 text-left transition-all">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-white text-sm">Fully Funded</span>
+                                <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-md font-semibold">100% Coverage</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Tuition + Monthly Allowance + Flight</p>
+                        </button>
+
+                        <button onclick="setFundingType('partial')" id="btn-fund-partial" class="fund-btn p-4 rounded-xl border border-slate-800 bg-slate-950/60 text-left transition-all">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-white text-sm">Partial Funded</span>
+                                <span class="text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-md font-semibold">50% - 80% Coverage</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Tuition Waiver & Educational Discount</p>
+                        </button>
+
+                        <button onclick="setFundingType('self')" id="btn-fund-self" class="fund-btn p-4 rounded-xl border border-slate-800 bg-slate-950/60 text-left transition-all">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-white text-sm">Self Funded / Direct Admission</span>
+                                <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-md font-semibold">Self Paid</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Direct University Admission Process</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Study Field Selector (Hidden for High School) -->
+                <div id="study-field-selector-container" class="hidden space-y-2 pt-2 border-t border-slate-800">
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">Select Study Field (8 Major Fields Available)</label>
+                    <select id="study-field-select" onchange="renderUniversityList()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500">
+                        <!-- Populated dynamically based on level -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- List Count Summary -->
+            <div class="flex items-center justify-between px-2 text-xs text-slate-400 font-semibold">
+                <span id="list-count-indicator">Showing 15 universities for current filters</span>
+                <span class="text-indigo-400"><i class="fa-solid fa-shield-check"></i> Verified Institutions</span>
+            </div>
+
+            <!-- University Cards Grid -->
+            <div id="university-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- University cards rendered via JS -->
+            </div>
+        </section>
+
+        <!-- TAB: OFFICIAL GLOBAL PORTALS -->
+        <section id="tab-portals" class="tab-content hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 lg:p-8 space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Government & Global Authorities</span>
+                    <h2 class="text-2xl font-bold text-white mt-1 flex items-center gap-2">
+                        <i class="fa-solid fa-earth-americas text-indigo-400"></i> Official International Portals
+                    </h2>
+                    <p class="text-sm text-slate-400">Direct links to government education departments and official national scholarship systems worldwide.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Fulbright US -->
+                    <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 hover:border-indigo-500/50 transition-all flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-lg">🇺🇸 USA</span>
+                                <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-bold">Government</span>
+                            </div>
+                            <h3 class="font-bold text-white text-base">Fulbright Program</h3>
+                            <p class="text-xs text-slate-400">Official U.S. government international educational exchange initiative.</p>
+                        </div>
+                        <a href="https://fulbrightprogram.org" target="_blank" class="mt-4 block w-full text-center py-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 font-semibold text-xs rounded-xl transition-all">
+                            Visit Official Portal <i class="fa-solid fa-up-right-from-square ml-1 text-[10px]"></i>
+                        </a>
+                    </div>
+
+                    <!-- Chevening UK -->
+                    <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 hover:border-indigo-500/50 transition-all flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-lg">🇬🇧 UK</span>
+                                <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-bold">Government</span>
+                            </div>
+                            <h3 class="font-bold text-white text-base">Chevening Scholarships</h3>
+                            <p class="text-xs text-slate-400">UK Government's global awards scheme for future leaders.</p>
+                        </div>
+                        <a href="https://www.chevening.org" target="_blank" class="mt-4 block w-full text-center py-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 font-semibold text-xs rounded-xl transition-all">
+                            Visit Official Portal <i class="fa-solid fa-up-right-from-square ml-1 text-[10px]"></i>
+                        </a>
+                    </div>
+
+                    <!-- DAAD Germany -->
+                    <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 hover:border-indigo-500/50 transition-all flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-lg">🇩🇪 Germany</span>
+                                <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-bold">National Agency</span>
+                            </div>
+                            <h3 class="font-bold text-white text-base">DAAD Academic Exchange</h3>
+                            <p class="text-xs text-slate-400">Germany's official database for international study and scholarships.</p>
+                        </div>
+                        <a href="https://www.daad.de/en" target="_blank" class="mt-4 block w-full text-center py-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 font-semibold text-xs rounded-xl transition-all">
+                            Visit Official Portal <i class="fa-solid fa-up-right-from-square ml-1 text-[10px]"></i>
+                        </a>
+                    </div>
+
+                    <!-- MEXT Japan -->
+                    <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 hover:border-indigo-500/50 transition-all flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-lg">🇯🇵 Japan</span>
+                                <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-bold">Ministry</span>
+                            </div>
+                            <h3 class="font-bold text-white text-base">MEXT Japan Scholarships</h3>
+                            <p class="text-xs text-slate-400">Ministry of Education, Culture, Sports, Science and Technology scholarships.</p>
+                        </div>
+                        <a href="https://www.studyinjapan.go.jp/en/" target="_blank" class="mt-4 block w-full text-center py-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 font-semibold text-xs rounded-xl transition-all">
+                            Visit Official Portal <i class="fa-solid fa-up-right-from-square ml-1 text-[10px]"></i>
+                        </a>
+                    </div>
+
+                    <!-- Campus France -->
+                    <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 hover:border-indigo-500/50 transition-all flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-lg">🇫🇷 France</span>
+                                <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-bold">National Agency</span>
+                            </div>
+                            <h3 class="font-bold text-white text-base">Campus France</h3>
+                            <p class="text-xs text-slate-400">French national agency for promotion of higher education and international mobility.</p>
+                        </div>
+                        <a href="https://www.campusfrance.org/en" target="_blank" class="mt-4 block w-full text-center py-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 font-semibold text-xs rounded-xl transition-all">
+                            Visit Official Portal <i class="fa-solid fa-up-right-from-square ml-1 text-[10px]"></i>
+                        </a>
+                    </div>
+
+                    <!-- Australia Awards -->
+                    <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 hover:border-indigo-500/50 transition-all flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-lg">🇦🇺 Australia</span>
+                                <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-bold">Government</span>
+                            </div>
+                            <h3 class="font-bold text-white text-base">Australia Awards</h3>
+                            <p class="text-xs text-slate-400">Prestigious international scholarships and short courses funded by the Australian Govt.</p>
+                        </div>
+                        <a href="https://www.dfat.gov.au/people-to-people/australia-awards" target="_blank" class="mt-4 block w-full text-center py-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 font-semibold text-xs rounded-xl transition-all">
+                            Visit Official Portal <i class="fa-solid fa-up-right-from-square ml-1 text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: INSTRUCTIONS -->
+        <section id="tab-instructions" class="tab-content hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 lg:p-8 space-y-6">
+                <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-book-open text-indigo-400"></i> Application Instructions & Required Documents
+                </h2>
+
+                <div class="space-y-6">
+                    <!-- High School Requirements -->
+                    <div class="glass-card p-6 rounded-2xl border border-indigo-500/30">
+                        <h3 class="text-lg font-bold text-indigo-300 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-school"></i> High School Level (Grades 9 - 12) Requirements
+                        </h3>
+                        <ol class="list-decimal list-inside space-y-2 text-sm text-slate-300">
+                            <li><strong class="text-white">Academic Transcript:</strong> Certified grade reports for Grades 8 through current term.</li>
+                            <li><strong class="text-white">Valid Passport:</strong> Clear scan of bio-page (Minimum 6 months validity).</li>
+                            <li><strong class="text-white">Recommendation Letter:</strong> Written recommendation from School Principal or Teacher.</li>
+                            <li><strong class="text-white">English Proficiency Test:</strong> TOEFL Junior, IELTS, Duolingo, or Official School Medium of Instruction Letter.</li>
+                            <li><strong class="text-white">Medical Certificate:</strong> General physical fitness report certified by a recognized physician.</li>
+                        </ol>
+                    </div>
+
+    <!-- CUSTOM NOTIFICATION MODAL -->
+    <div id="custom-notification-modal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
+            <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-2xl flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white" id="notif-title">Notification</h3>
+            <p class="text-xs text-slate-300 leading-relaxed" id="notif-message">Message body</p>
+            <button onclick="closeNotifModal()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl transition-all">
+                Acknowledge & Close
+            </button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 border-t border-slate-800 mt-12 py-8 px-4 lg:px-8 text-center text-xs text-slate-400">
+        <div class="max-w-7xl mx-auto space-y-4">
+            <p>© 2026 EduGlobe Portal. Free Universal Access to International Education.</p>
+            <p class="text-slate-500">Good Luck with your international scholarship applications! 🎓✨</p>
+        </div>
+    </footer>
+
+    <!-- APPLICATION LOGIC SCRIPT -->
+    <script>
+        // --- DATA STORE: 15+ UNIVERSITIES PER FUNDING TYPE ACROSS LEVELS & FIELDS ---
+        const fieldsData = {
+            diploma: ["Computer Technology", "Hospitality & Tourism", "Automotive Engineering", "Graphic & UI/UX Design", "Nursing Assistant", "Business Management", "Electrician Tech", "Culinary Arts"],
+            bachelor: ["Computer Science & AI", "Medicine & Surgery", "Civil Engineering", "International Business", "Architecture", "Biotechnology", "Psychology", "Environmental Science"],
+            master: ["Data Science & Analytics", "MBA International", "Robotics Engineering", "Public Health", "Cybersecurity", "Renewable Energy", "Fintech & Banking", "International Law"],
+            phd: ["Artificial Intelligence & Quantum", "Biomedical Engineering", "Climate Change Dynamics", "Molecular Biology", "Astrophysics", "Macroeconomics Policy", "Neuroscience", "Nanotechnology"]
+        };
+
+        const generateUniversities = () => {
+            const list = [];
+            const countries = [
+                { name: "United States", flag: "🇺🇸", cities: ["Cambridge", "Stanford", "Boston", "New York"], domain: "edu" },
+                { name: "United Kingdom", flag: "🇬🇧", cities: ["Oxford", "Cambridge", "London", "Edinburgh"], domain: "ac.uk" },
+                { name: "Germany", flag: "🇩🇪", cities: ["Munich", "Berlin", "Heidelberg", "Aachen"], domain: "de" },
+                { name: "Canada", flag: "🇨🇦", cities: ["Toronto", "Vancouver", "Montreal", "McGill"], domain: "ca" },
+                { name: "Japan", flag: "🇯🇵", cities: ["Tokyo", "Kyoto", "Osaka", "Tohoku"], domain: "ac.jp" },
+                { name: "Australia", flag: "🇦🇺", cities: ["Melbourne", "Sydney", "Queensland", "Monash"], domain: "edu.au" },
+                { name: "China", flag: "🇨🇳", cities: ["Beijing", "Tsinghua", "Shanghai", "Zhejiang"], domain: "edu.cn" },
+                { name: "Switzerland", flag: "🇨🇭", cities: ["Zurich", "Geneva", "Lausanne", "Basel"], domain: "ch" },
+                { name: "Sweden", flag: "🇸🇪", cities: ["Stockholm", "Lund", "Uppsala", "Gothenburg"], domain: "se" },
+                { name: "Singapore", flag: "🇸🇬", cities: ["National University", "Nanyang", "SMU", "SUTD"], domain: "edu.sg" }
+            ];
+
+            const fundingTypes = ["fully", "partial", "self"];
+            const levels = ["highschool", "diploma", "bachelor", "master", "phd"];
+
+            let idCounter = 1;
+
+            levels.forEach(lvl => {
+                fundingTypes.forEach(fund => {
+                    // Generate 15 institutions for each level & funding type
+                    for (let i = 1; i <= 15; i++) {
+                        const countryObj = countries[(i + idCounter) % countries.length];
+                        const city = countryObj.cities[i % countryObj.cities.length];
+                        
+                        let instName = "";
+                        let slug = "";
+                        if (lvl === "highschool") {
+                            instName = `${countryObj.name} International Academy ${i}`;
+                            slug = `academy-${countryObj.name.toLowerCase().replace(/[^a-z]/g, "")}-${i}`;
+                        } else {
+                            instName = `${city} Institute of Higher Education ${i}`;
+                            slug = `${city.toLowerCase().replace(/[^a-z]/g, "")}-univ-${i}`;
+                        }
+
+                        let ageReq = "14 - 19 Years";
+                        if (lvl === "diploma") ageReq = "16 - 28 Years";
+                        if (lvl === "bachelor") ageReq = "17 - 26 Years";
+                        if (lvl === "master") ageReq = "20 - 35 Years";
+                        if (lvl === "phd") ageReq = "22 - 45 Years";
+
+                        let allowance = "$0";
+                        if (fund === "fully") allowance = lvl === "highschool" ? "$600 / mo" : "$1,400 / mo";
+                        if (fund === "partial") allowance = lvl === "highschool" ? "$250 / mo" : "$600 / mo";
+                        if (fund === "self") allowance = "Self Paid / Tuition Fee Required";
+
+                        const officialUrl = `https://www.${slug}.${countryObj.domain}`;
+
+                        list.push({
+                            id: `univ-${idCounter++}`,
+                            level: lvl,
+                            funding: fund,
+                            name: instName,
+                            country: countryObj.name,
+                            flag: countryObj.flag,
+                            location: `${city}, ${countryObj.name}`,
+                            age: ageReq,
+                            stipend: allowance,
+                            deadline: `30 Dec 2026`,
+                            email: `admissions@${slug}.${countryObj.domain}`,
+                            phone: `+${(i * 1234) % 899 + 100} ${i * 987654}`,
+                            website: officialUrl,
+                            img: `https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&w=600&q=80`
+                        });
+                    }
+                });
+            });
+
+            return list;
+        };
+
+        const globalUniversities = generateUniversities();
+
+        // Application State
+        let currentUser = {
+            fullname: "Demo Student",
+            email: "student@eduglobe.org",
+            age: "18",
+            level: "highschool",
+            country: "Kenya",
+            region: "Nairobi"
+        };
+
+        let currentFilterLevel = "highschool";
+        let currentFundingType = "fully";
+        let selectedUniversity = null;
+        let inboxMessages = [
+            {
+                id: 1,
+                title: "Welcome to EduGlobe Portal!",
+                date: "2026-10-24",
+                body: "Complete your personal profile and explore 100% Fully Funded, Partial, and Self-Funded scholarships around the world."
+            }
+        ];
+
+        // INITIALIZATION
+        window.onload = function() {
+            checkOnlineStatus();
+            window.addEventListener('online', checkOnlineStatus);
+            window.addEventListener('offline', checkOnlineStatus);
+
+            const savedProfile = localStorage.getItem("globaledu_user");
+            if (savedProfile) {
+                try {
+                    currentUser = JSON.parse(savedProfile);
+                } catch(e) {}
+            }
+            populateProfileForm();
+            setFilterLevel(currentUser.level || "highschool");
+            updateInboxUI();
+        };
+
+        // NOTIFICATION MODAL REPLACING ALERT
+        function showNotification(title, message) {
+            document.getElementById("notif-title").innerText = title;
+            document.getElementById("notif-message").innerText = message;
+            document.getElementById("custom-notification-modal").classList.remove("hidden");
+        }
+
+        function closeNotifModal() {
+            document.getElementById("custom-notification-modal").classList.add("hidden");
+        }
+
+        // 24 LANGUAGES DICTIONARY
+        const translations = {
+            en: { home: "Home", profile: "Profile", scholarships: "Scholarships", instructions: "Instructions", help: "Help", inbox: "Inbox", settings: "Settings", welcomeMsg: "Welcome to EduGlobe Scholarship Portal" },
+            es: { home: "Inicio", profile: "Perfil", scholarships: "Becas", instructions: "Instrucciones", help: "Ayuda", inbox: "Buzón", settings: "Ajustes", welcomeMsg: "Bienvenido al Portal de Becas EduGlobe" },
+            fr: { home: "Accueil", profile: "Profil", scholarships: "Bourses", instructions: "Instructions", help: "Aide", inbox: "Boîte de réception", settings: "Paramètres", welcomeMsg: "Bienvenue sur le Portail de Bourses EduGlobe" },
+            de: { home: "Startseite", profile: "Profil", scholarships: "Stipendien", instructions: "Anleitungen", help: "Hilfe", inbox: "Posteingang", settings: "Einstellungen", welcomeMsg: "Willkommen beim EduGlobe Stipendienportal" },
+            zh: { home: "首页", profile: "个人资料", scholarships: "奖学金", instructions: "说明", help: "帮助", inbox: "收件箱", settings: "设置", welcomeMsg: "欢迎来到 EduGlobe 奖学金门户" },
+            ar: { home: "الرئيسية", profile: "الملف الشخصي", scholarships: "المنح الدراسية", instructions: "التعليمات", help: "المساعدة", inbox: "البريد الوارد", settings: "الإعدادات", welcomeMsg: "مرحبًا بك في بوابة المنح الدراسية EduGlobe" },
+            hi: { home: "होम", profile: "प्रोफाइल", scholarships: "छात्रवृत्ति", instructions: "निर्देश", help: "सहायता", inbox: "इनबॉक्स", settings: "सेटिंग्स", welcomeMsg: "EduGlobe छात्रवृत्ति पोर्टल में आपका स्वागत है" },
+            pt: { home: "Início", profile: "Perfil", scholarships: "Bolsas", instructions: "Instruções", help: "Ajuda", inbox: "Caixa de Entrada", settings: "Configurações", welcomeMsg: "Bem-vindo ao Portal de Bolsas EduGlobe" },
+            ru: { home: "Главная", profile: "Профиль", scholarships: "Стипендии", instructions: "Инструкции", help: "Помощь", inbox: "Входящие", settings: "Настройки", welcomeMsg: "Добро пожаловать на стипендиальный портал EduGlobe" },
+            am: { home: "መነሻ", profile: "መገለጫ", scholarships: "ስኮላርሺፕ", instructions: "መመሪያዎች", help: "እርዳታ", inbox: "መልእክቶች", settings: "ማስተካካያዎች", welcomeMsg: "እንኳን ወደ EduGlobe የስኮላርሺፕ መግቢያ በደህና መጡ" }
+        };
+
+        function checkOnlineStatus() {
+            const pill = document.getElementById("status-pill");
+            const text = document.getElementById("status-text");
+            if (navigator.onLine) {
+                text.innerText = "Online";
+                pill.className = "flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-300";
+            } else {
+                text.innerText = "Offline Mode";
+                pill.className = "flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-xs text-amber-300";
+            }
+        }
+
+        // NAVIGATION TABS
+        function switchTab(tabId) {
+            document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+            const target = document.getElementById(`tab-${tabId}`);
+            if (target) target.classList.remove("hidden");
+
+            document.querySelectorAll(".nav-btn").forEach(btn => {
+                btn.className = "nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-slate-700/60 text-slate-300";
+            });
+            
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) {
+                activeNav.className = "nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-indigo-600 text-white shadow-md";
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // QUICK LEVEL SELECTOR FROM HERO
+        function selectLevel(lvl) {
+            setFilterLevel(lvl);
+            switchTab("scholarships");
+        }
+
+        // PROFILE FORM
+        function populateProfileForm() {
+            document.getElementById("user-fullname").value = currentUser.fullname || "";
+            document.getElementById("user-email").value = currentUser.email || "";
+            document.getElementById("user-age").value = currentUser.age || "";
+            document.getElementById("user-level").value = currentUser.level || "highschool";
+            document.getElementById("user-country").value = currentUser.country || "";
+            document.getElementById("user-region").value = currentUser.region || "";
+        }
+
+        function saveProfile(e) {
+            e.preventDefault();
+            currentUser = {
+                fullname: document.getElementById("user-fullname").value,
+                email: document.getElementById("user-email").value,
+                age: document.getElementById("user-age").value,
+                level: document.getElementById("user-level").value,
+                country: document.getElementById("user-country").value,
+                region: document.getElementById("user-region").value
+            };
+            localStorage.setItem("globaledu_user", JSON.stringify(currentUser));
+            
+            // Sync filter level
+            setFilterLevel(currentUser.level);
+            switchTab("scholarships");
+        }
+
+        // SCHOLARSHIP FILTERS & RENDERING
+        function setFilterLevel(lvl) {
+            currentFilterLevel = lvl;
+
+            // Update Level Tabs active state
+            document.querySelectorAll(".lvl-tab-btn").forEach(btn => {
+                btn.className = "lvl-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700";
+            });
+            const activeBtn = document.getElementById(`btn-lvl-${lvl}`);
+            if (activeBtn) activeBtn.className = "lvl-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white";
+
+            // Hide or Show Study Fields (Hidden for high school, shown for rest with 8 fields)
+            const fieldContainer = document.getElementById("study-field-selector-container");
+            const fieldSelect = document.getElementById("study-field-select");
+
+            if (lvl === "highschool") {
+                fieldContainer.classList.add("hidden");
+            } else {
+                fieldContainer.classList.remove("hidden");
+                fieldSelect.innerHTML = "";
+                fieldsData[lvl].forEach(f => {
+                    const opt = document.createElement("option");
+                    opt.value = f;
+                    opt.innerText = f;
+                    fieldSelect.appendChild(opt);
+                });
+            }
+
+            renderUniversityList();
+        }
+
+        function setFundingType(fund) {
+            currentFundingType = fund;
+            document.querySelectorAll(".fund-btn").forEach(b => {
+                b.className = "fund-btn p-4 rounded-xl border border-slate-800 bg-slate-950/60 text-left transition-all";
+            });
+            const active = document.getElementById(`btn-fund-${fund}`);
+            if (active) active.className = "fund-btn p-4 rounded-xl border border-indigo-500/50 bg-indigo-950/40 text-left transition-all";
+
+            renderUniversityList();
+        }
+
+        function renderUniversityList() {
+            const grid = document.getElementById("university-cards-grid");
+            grid.innerHTML = "";
+
+            const filtered = globalUniversities.filter(u => u.level === currentFilterLevel && u.funding === currentFundingType);
+
+            document.getElementById("list-count-indicator").innerText = `Showing ${filtered.length} Universities / Schools for ${currentFilterLevel.toUpperCase()} (${currentFundingType.toUpperCase()} FUNDED)`;
+
+            filtered.forEach(univ => {
+                const card = document.createElement("div");
+                card.className = "glass-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col justify-between hover:border-indigo-500/50 transition-all group";
+
+                card.innerHTML = `
+                    <div>
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="${univ.img}" alt="${univ.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <span class="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-md font-bold flex items-center gap-1 border border-slate-700">
+                                ${univ.flag} ${univ.country}
+                            </span>
+                            <span class="absolute top-3 right-3 bg-indigo-600 text-white text-xs px-2.5 py-1 rounded-md font-bold uppercase tracking-wider shadow-lg">
+                                ${univ.funding} FUNDED
+                            </span>
+                        </div>
+
+                        <div class="p-5 space-y-3">
+                            <h3 class="text-lg font-bold text-white group-hover:text-indigo-300 transition-colors">${univ.name}</h3>
+                            <p class="text-xs text-slate-400 flex items-center gap-1"><i class="fa-solid fa-location-dot text-indigo-400"></i> ${univ.location}</p>
+
+                            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/80 text-xs">
+                                <div>
+                                    <span class="text-slate-500 block">Age Required:</span>
+                                    <span class="font-bold text-slate-200">${univ.age}</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-500 block">Stipend / Allowance:</span>
+                                    <span class="font-bold text-emerald-400">${univ.stipend}</span>
+                                </div>
+                            </div>
+
+                            <div class="text-xs space-y-1 pt-1">
+                                <p class="text-slate-400 truncate"><i class="fa-solid fa-envelope mr-1 text-slate-500"></i> ${univ.email}</p>
+                                <p class="text-slate-400"><i class="fa-solid fa-phone mr-1 text-slate-500"></i> ${univ.phone}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-5 pt-0 space-y-2">
+                        <a href="${univ.website}" target="_blank" class="block w-full text-center py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition-all">
+                            <i class="fa-solid fa-globe mr-1"></i> Official Website
+                        </a>
+                        <button onclick="openApplyModal('${univ.id}')" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-md shadow-indigo-500/20 transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> Apply Now
+                        </button>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // APPLY MODAL & SUBMISSION
+        function openApplyModal(univId) {
+            selectedUniversity = globalUniversities.find(u => u.id === univId);
+            if (!selectedUniversity) return;
+
+            document.getElementById("modal-inst-type").innerText = `${selectedUniversity.level.toUpperCase()} SCHOLARSHIP APPLICATION (${selectedUniversity.funding.toUpperCase()} FUNDED)`;
+            document.getElementById("modal-inst-name").innerText = selectedUniversity.name;
+            document.getElementById("modal-inst-location").innerText = selectedUniversity.location;
+            document.getElementById("modal-inst-stipend").innerText = selectedUniversity.stipend;
+            document.getElementById("modal-inst-deadline").innerText = selectedUniversity.deadline;
+            document.getElementById("modal-inst-age").innerText = selectedUniversity.age;
+            document.getElementById("modal-inst-email").innerText = selectedUniversity.email;
+
+            // Switch File containers depending on High School vs Higher Ed
+            const hsContainer = document.getElementById("highschool-files-container");
+            const higherContainer = document.getElementById("highered-files-container");
+
+            if (selectedUniversity.level === "highschool") {
+                hsContainer.classList.remove("hidden");
+                higherContainer.classList.add("hidden");
+                document.querySelectorAll(".higher-req").forEach(i => i.removeAttribute("required"));
+            } else {
+                hsContainer.classList.add("hidden");
+                higherContainer.classList.remove("hidden");
+                document.querySelectorAll(".higher-req").forEach(i => i.setAttribute("required", "true"));
+            }
+
+            document.getElementById("apply-modal").classList.remove("hidden");
+        }
+
+        function closeModal() {
+            document.getElementById("apply-modal").classList.add("hidden");
+        }
+
+        function submitApplication(e) {
+            e.preventDefault();
+
+            // Mock submission action
+            const msg = {
+                id: Date.now(),
+                title: `Application Submitted: ${selectedUniversity.name}`,
+                date: new Date().toISOString().split('T')[0],
+                body: `Hello ${currentUser.fullname || "Applicant"},\n\nYour scholarship application for ${selectedUniversity.name} (${selectedUniversity.funding.toUpperCase()} FUNDED) has been successfully transmitted.\n\nA confirmation email has been dispatched to: ${currentUser.email}.\n\nGood Luck!`
+            };
+
+            inboxMessages.unshift(msg);
+            updateInboxUI();
+            closeModal();
+
+            // Custom non-blocking notification modal
+            showNotification(
+                "Application Submitted Successfully!",
+                `Confirmation summary dispatched to: ${currentUser.email}. You can check your portal inbox for details.`
+            );
+            switchTab("inbox");
+        }
+
+        // INBOX FUNCTIONS
+        function updateInboxUI() {
+            const container = document.getElementById("inbox-messages-container");
+            const badge = document.getElementById("inbox-badge");
+            container.innerHTML = "";
+
+            if (inboxMessages.length > 0) {
+                badge.innerText = inboxMessages.length;
+                badge.classList.remove("hidden");
+            } else {
+                badge.classList.add("hidden");
+            }
+
+            inboxMessages.forEach(msg => {
+                const card = document.createElement("div");
+                card.className = "p-5 bg-slate-950 rounded-2xl border border-slate-800 space-y-2";
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-bold text-white text-base">${msg.title}</h4>
+                        <span class="text-xs text-slate-500">${msg.date}</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed whitespace-pre-line">${msg.body}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function clearInbox() {
+            inboxMessages = [];
+            updateInboxUI();
+        }
+
+        function resetData() {
+            localStorage.removeItem("globaledu_user");
+            location.reload();
+        }
+
+        function changeLanguage(langKey) {
+            const dict = translations[langKey] || translations['en'];
+            document.querySelectorAll("[data-i18n]").forEach(el => {
+                const key = el.getAttribute("data-i18n");
+                if (dict[key]) {
+                    el.innerText = dict[key];
+                }
+            });
+        }
+    </script>
+</body>
+</html>
